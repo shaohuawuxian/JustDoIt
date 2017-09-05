@@ -3,39 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="启动" />
-
-    <TextView
-        android:id="@+id/link"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="连接远程"
-        android:layout_below="@+id/textview"
-        android:layout_marginTop="8dp"/>
-
-    <TextView
-        android:id="@+id/getlist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="获取数据"
-        android:layout_below="@+id/link"
-        android:layout_marginTop="8dp"/>
-
-    <TextView
-        android:id="@+id/add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="添加"
-        android:layout_below="@+id/getlist"
-        android:layout_marginTop="8dp"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

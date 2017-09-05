@@ -33,7 +33,7 @@ public class RemoteService extends Service {
         @Override
         public List<String> getUndercoverNames() throws RemoteException {
             try {
-                Thread.sleep(2000);//查询比较慢，等待3秒
+                Thread.sleep(10000);//查询比较慢，等待3秒
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
