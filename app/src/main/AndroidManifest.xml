@@ -18,7 +18,6 @@
         </activity>
 
         <activity android:name=".handlerthread.NewIntentActivity">
-
         </activity>
 
         <activity android:name=".ipc.IPCActivity">

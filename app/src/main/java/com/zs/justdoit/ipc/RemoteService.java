@@ -25,8 +25,21 @@ public class RemoteService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        System.out.println("收到绑定信息");
+        System.out.println("远程服务收到绑定信息");
         return undercoverInterface;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        System.out.println("远程服务解除绑定");
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        System.out.println("远程Service onDestroy");
+        System.exit(0);//关闭当前进程
     }
 
     private UndercoverInterface.Stub undercoverInterface=new UndercoverInterface.Stub(){
