@@ -3,6 +3,7 @@ package com.zs.justdoit.ipc;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.zs.justdoit.R;
@@ -44,5 +45,14 @@ public class IPCActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
         RemoteConnection.getInstance().unBindService();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode==4){
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

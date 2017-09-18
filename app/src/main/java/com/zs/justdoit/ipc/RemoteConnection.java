@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.IBinder.DeathRecipient;
 import android.os.RemoteException;
 
 import java.util.List;
@@ -43,16 +44,21 @@ public class RemoteConnection implements ServiceConnection{
             e.printStackTrace();
         }
         try {
-            service.linkToDeath(new IBinder.DeathRecipient() {
-                @Override
-                public void binderDied() {
-                    bindService(mContext);
-                }
-            }, 0);
+            service.linkToDeath(deathRecipient, 0);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
+
+    DeathRecipient deathRecipient=new DeathRecipient(){
+
+        @Override
+        public void binderDied() {
+            if(mContext!=null){
+                bindService(mContext);
+            }
+        }
+    };
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
@@ -64,6 +70,7 @@ public class RemoteConnection implements ServiceConnection{
         if(undercoverInterface!=null){
             List<String> list= null;
             try {
+                //获取数据在binder线程池执行，会挂起主线程，会造成主线程卡顿或ANR
                 list = undercoverInterface.getUndercoverNames();
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -86,10 +93,12 @@ public class RemoteConnection implements ServiceConnection{
         if(undercoverInterface!=null){
             try {
                 undercoverInterface.unregistUndercoverAddListener(linstener);
+                undercoverInterface.asBinder().unlinkToDeath(deathRecipient,0);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
             mContext.unbindService(this);
+            mContext=null;
         }
     }
 }
