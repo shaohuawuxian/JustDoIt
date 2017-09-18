@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.zs.justdoit.handlerthread.NewIntentActivity;
 import com.zs.justdoit.handlerthread.TestNewIntentService;
+import com.zs.justdoit.hook.InstrumentationHook;
+import com.zs.justdoit.hook.InstrumentationHookActivity;
 import com.zs.justdoit.ipc.IPCActivity;
 import com.zs.justdoit.ipc.RemoteConnection;
 
@@ -29,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
         activityList.clear();
         activityList.add(NewIntentActivity.class);
         activityList.add(IPCActivity.class);
-    }
+        activityList.add(InstrumentationHookActivity.class);
+}
 
     RecyclerView mRecyclerView;
     LinearLayoutManager linearLayoutManager;
