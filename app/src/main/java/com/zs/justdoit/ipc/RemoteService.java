@@ -3,6 +3,7 @@ package com.zs.justdoit.ipc;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
@@ -21,7 +22,7 @@ public class RemoteService extends Service {
         mList.add("black");
     }
 
-    UndercoverAddLinstener mUndercoverAddLinstener;
+    RemoteCallbackList<UndercoverAddLinstener> mRemoteCallbackList=new RemoteCallbackList();
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -55,9 +56,13 @@ public class RemoteService extends Service {
         @Override
         public void addUndercover(String name) throws RemoteException {
             mList.add(name);
-            if(mUndercoverAddLinstener!=null){
-                mUndercoverAddLinstener.hasAdd();
+            int n=mRemoteCallbackList.beginBroadcast();
+            while(n>0){
+                UndercoverAddLinstener undercoverAddLinstener=mRemoteCallbackList.getBroadcastItem(n);
+                undercoverAddLinstener.hasAdd();
+                n--;
             }
+            mRemoteCallbackList.finishBroadcast();
         }
         @Override
         public void removeUndercover(String name) throws RemoteException {
@@ -66,12 +71,12 @@ public class RemoteService extends Service {
 
         @Override
         public void setUndercoverAddListener(UndercoverAddLinstener listener) throws RemoteException {
-            mUndercoverAddLinstener=listener;
+            mRemoteCallbackList.register(listener);
         }
 
         @Override
         public void unregistUndercoverAddListener(UndercoverAddLinstener listener) throws RemoteException {
-            mUndercoverAddLinstener=null;
+            mRemoteCallbackList.unregister(listener);
         }
     };
 }

@@ -49,16 +49,15 @@ public class InstrumentationHook extends Instrumentation {
     public ActivityResult execStartActivity(
             Context who, IBinder contextThread, IBinder token, Activity target,
             Intent intent, int requestCode, Bundle options) {
-        System.out.print("\n执行了startActivity, 参数如下: \n" + "who = [" + who + "], " +
-                "\ncontextThread = [" + contextThread + "], \ntoken = [" + token + "], " +
-                "\ntarget = [" + target + "], \nintent = [" + intent +
-                "], \nrequestCode = [" + requestCode + "], \noptions = [" + options + "]");
+            System.out.println("\n执行了execStartActivity, hook启动Activity start");
         try {
             Method method = mInstrumentation.getClass().getMethod("execStartActivity",new Class[]{Context.class,
                     IBinder.class,IBinder.class,Activity.class,Intent.class,int.class,Bundle.class});
             method.setAccessible(true);
-            return (ActivityResult)method.invoke(mInstrumentation, who, contextThread, token,
+            ActivityResult activityResult=(ActivityResult)method.invoke(mInstrumentation, who, contextThread, token,
                     target, intent, requestCode, options);
+            System.out.println("\n执行了execStartActivity, hook启动Activity end");
+            return activityResult;
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {

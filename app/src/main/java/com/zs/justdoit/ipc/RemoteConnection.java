@@ -14,30 +14,36 @@ import java.util.List;
  * Created by zhangshao on 2017/8/25.
  */
 
-public class RemoteConnection implements ServiceConnection{
+public class RemoteConnection implements ServiceConnection {
 
-    static RemoteConnection remoteConnection=new RemoteConnection();
+    static RemoteConnection remoteConnection = new RemoteConnection();
     UndercoverInterface undercoverInterface;
     Context mContext;
-    private RemoteConnection(){}
-    public static RemoteConnection getInstance(){
+
+    private RemoteConnection() {
+    }
+
+    public static RemoteConnection getInstance() {
         return remoteConnection;
     }
-    public void bindService(Context context){
-        mContext=context;
-        Intent intent=new Intent(context,RemoteService.class);
-        context.bindService(intent,this,Context.BIND_AUTO_CREATE);
+
+    public void bindService(Context context) {
+        mContext = context;
+        Intent intent = new Intent(context, RemoteService.class);
+        context.bindService(intent, this, Context.BIND_AUTO_CREATE);
     }
-    UndercoverAddLinstener.Stub linstener=new UndercoverAddLinstener.Stub() {
+
+    UndercoverAddLinstener.Stub linstener = new UndercoverAddLinstener.Stub() {
         @Override
         public void hasAdd() throws RemoteException {
             getList();
         }
     };
+
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         System.out.println("绑定成功");
-        undercoverInterface=UndercoverInterface.Stub.asInterface(service);
+        undercoverInterface = UndercoverInterface.Stub.asInterface(service);
         try {
             undercoverInterface.setUndercoverAddListener(linstener);
         } catch (RemoteException e) {
@@ -50,11 +56,11 @@ public class RemoteConnection implements ServiceConnection{
         }
     }
 
-    DeathRecipient deathRecipient=new DeathRecipient(){
+    DeathRecipient deathRecipient = new DeathRecipient() {
 
         @Override
         public void binderDied() {
-            if(mContext!=null){
+            if (mContext != null) {
                 bindService(mContext);
             }
         }
@@ -63,12 +69,12 @@ public class RemoteConnection implements ServiceConnection{
     @Override
     public void onServiceDisconnected(ComponentName name) {
         System.out.println("断开连接");
-        undercoverInterface=null;
+        undercoverInterface = null;
     }
 
-    public void getList(){
-        if(undercoverInterface!=null){
-            List<String> list= null;
+    public void getList() {
+        if (undercoverInterface != null) {
+            List<String> list = null;
             try {
                 //获取数据在binder线程池执行，会挂起主线程，会造成主线程卡顿或ANR
                 list = undercoverInterface.getUndercoverNames();
@@ -79,8 +85,8 @@ public class RemoteConnection implements ServiceConnection{
         }
     }
 
-    public void add(String name){
-        if(undercoverInterface!=null){
+    public void add(String name) {
+        if (undercoverInterface != null) {
             try {
                 undercoverInterface.addUndercover(name);
             } catch (RemoteException e) {
@@ -89,16 +95,20 @@ public class RemoteConnection implements ServiceConnection{
         }
     }
 
-    public void unBindService(){
-        if(undercoverInterface!=null){
+    public void unBindService() {
+        if (undercoverInterface != null) {
             try {
                 undercoverInterface.unregistUndercoverAddListener(linstener);
-                undercoverInterface.asBinder().unlinkToDeath(deathRecipient,0);
+                undercoverInterface.asBinder().unlinkToDeath(deathRecipient, 0);
+                undercoverInterface = null;
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-            mContext.unbindService(this);
-            mContext=null;
+            if (mContext != null) {
+                mContext.unbindService(this);
+                mContext = null;
+            }
+
         }
     }
 }
