@@ -76,7 +76,7 @@ public class RemoteConnection implements ServiceConnection {
         if (undercoverInterface != null) {
             List<String> list = null;
             try {
-                //获取数据在binder线程池执行，会挂起主线程，会造成主线程卡顿或ANR
+                //获取数据在binder线程池执行，会挂起执行方法的线程，如果是主线程调用，会挂起主线程造成主线程卡顿或ANR
                 list = undercoverInterface.getUndercoverNames();
             } catch (RemoteException e) {
                 e.printStackTrace();
